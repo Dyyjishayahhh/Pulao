@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://k3jme1nj6pef" path="res://main.gd" id="1_h2yge"]
 [ext_resource type="PackedScene" uid="uid://dxijytcuvm5i2" path="res://player.tscn" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://d0ulmx4dwlujh" path="res://mob.tscn" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://di1ol4dfoybhl" path="res://hud.tscn" id="4_1bvp3"]
+[ext_resource type="AudioStream" uid="uid://o6vkmiylc7h1" path="res://art/Gem Cristian - Malunggay Pandesal (Lyrics).mp3" id="5_7mycd"]
+[ext_resource type="AudioStream" uid="uid://sfkcm7wdvhmh" path="res://art/gameover.wav" id="6_272bh"]
 
 [sub_resource type="Curve2D" id="Curve2D_ig7tw"]
 _data = {
@@ -10,27 +13,48 @@ _data = {
 }
 point_count = 5
 
-[node name="Main" type="Node" unique_id=642452662]
+[node name="Main" type="Node" unique_id=1579212719]
 script = ExtResource("1_h2yge")
 mob_scene = ExtResource("2_1bvp3")
 
+[node name="ColorRect" type="ColorRect" parent="." unique_id=799827107]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.8255064, 0.5540074, 0.6825728, 1)
+
 [node name="Player" parent="." unique_id=463751653 instance=ExtResource("1_ig7tw")]
 
-[node name="MobTimer" type="Timer" parent="." unique_id=823023531]
+[node name="MobTimer" type="Timer" parent="." unique_id=707691027]
 wait_time = 0.5
 
-[node name="ScoreTimer" type="Timer" parent="." unique_id=283766644]
+[node name="ScoreTimer" type="Timer" parent="." unique_id=432471791]
 
-[node name="StartTimer" type="Timer" parent="." unique_id=98632167]
+[node name="StartTimer" type="Timer" parent="." unique_id=1274608662]
 wait_time = 2.0
 one_shot = true
 
-[node name="StartPosition" type="Marker2D" parent="." unique_id=724463226]
+[node name="StartPosition" type="Marker2D" parent="." unique_id=2126741585]
 position = Vector2(240, 450)
 
-[node name="MobPath" type="Path2D" parent="." unique_id=390969619]
+[node name="MobPath" type="Path2D" parent="." unique_id=1511532828]
 curve = SubResource("Curve2D_ig7tw")
 
-[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath" unique_id=1281688240]
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath" unique_id=405865732]
 
+[node name="HUD" parent="." unique_id=1662922734 instance=ExtResource("4_1bvp3")]
+
+[node name="Music" type="AudioStreamPlayer2D" parent="." unique_id=1241538409]
+stream = ExtResource("5_7mycd")
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="." unique_id=1508911261]
+stream = ExtResource("6_272bh")
+
+[connection signal="hit" from="Player" to="." method="new_game"]
 [connection signal="hit" from="Player" to="." method="game_over"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
+[connection signal="start_game" from="HUD" to="." method="new_game"]
